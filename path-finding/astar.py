@@ -2,27 +2,38 @@
 # Explanation https://www.geeksforgeeks.org/a-search-algorithm/
 import sys
 from random import randint
+import math
+
+def getTargetMaze(randomPos):
+    maze = [
+        ['.', '.', 'x', '.', '.', 'x'],
+        ['x', '.', '.', 'x', '.', '.'],
+        ['x', '.', 'x', '.', '.', 'x'],
+        ['.', '.', 'x', 'x', 'x', '.'],
+        ['.', 'x', '.', 'x', '.', '.'],
+        ['R', '.', '.', '.', '.', '.']]
+
+    maze[randomPos[0]][randomPos[1]] = 'o'
+
+    return maze
 
 def getMazes():
     emptyMaze = [
-        [' ', ' ', 'x', ' ', ' ', 'x'],
-        ['x', ' ', ' ', 'x', ' ', ' '],
-        ['x', ' ', 'x', ' ', ' ', 'x'],
-        [' ', ' ', 'x', 'x', 'x', ' '],
-        [' ', 'x', ' ', 'x', ' ', ' '],
-        ['R', ' ', ' ', ' ', ' ', ' ']]
+        ['.', '.', 'x', '.', '.', 'x'],
+        ['x', '.', '.', 'x', '.', '.'],
+        ['x', '.', 'x', '.', '.', 'x'],
+        ['.', '.', 'x', 'x', 'x', '.'],
+        ['.', 'x', '.', 'x', '.', '.'],
+        ['R', '.', '.', '.', '.', '.']]
 
     mazesList = []
 
     for _ in range(20):
         randomPos = (5,0)
-        while emptyMaze[randomPos[0]][randomPos[1]] != ' ':
+        while emptyMaze[randomPos[0]][randomPos[1]] != '.':
             randomPos = (randint(0, 5),randint(0, 5))
-        
-        # Not passing by reference the list 
-        auxMaze = emptyMaze[:] 
-        auxMaze[randomPos[0]][randomPos[1]] = 'o'
-        mazesList.append(auxMaze)
+
+        mazesList.append(getTargetMaze(randomPos))
 
     return mazesList
 
@@ -39,16 +50,40 @@ def findMarks(maze):
 def manhattanDist(actual, target):
     return  abs(actual[0] - target[0]) + abs(actual[1] - target[1])
 
-def astar(maze, init, target, distance, actual):
+def euclideanDist(actual, target):
+    return  math.sqrt((actual[0] - target[0]) ** 2 + (actual[1] - target[1]) ** 2)
+
+def printPath(maze, steps):
+    count = 0
+    aux = []
+    for line in maze:
+        aux += [''.join(line)]
+
+    for i, j in steps:
+        count += 1
+        aux[i] = list(aux[i])
+        aux[i][j] = str(count)
+        aux[i] = ''.join(aux[i])
+
+    print()
+    for line in aux:
+        print('\t\t\t' + line)
+    print()
+
+def astar(maze, init, target, distance, steps,  actual):
     # Set parameters to check overflow
     height = len(maze)
     width = len(maze[0])
     # Register of the next move (always the best)
     bestDist = sys.maxsize
     bestMove = (0,0)
-    print(actual)
+    # Adding the steps
+    steps.append(actual)
+
     if actual == target:
-        return True
+        print('\t\t\t' + str(steps))
+        printPath(maze, steps)
+        return steps
 
     # Check right
     if actual[1]+1 < width:
@@ -86,11 +121,20 @@ def astar(maze, init, target, distance, actual):
             bestDist = distTop
             bestMove = moveTop
 
-    astar(maze, init, target, distance, bestMove)
+    astar(maze, init, target, distance, steps, bestMove)
 
 if __name__ == "__main__":
     mazesList = getMazes()
-    maze = mazesList[0]
-    init, target = findMarks(maze)
-    print('Init:', init, 'Target:', target)
-    astar(maze, init, target, manhattanDist, init)
+    print('- Algorithm A* search')
+
+    for maze in mazesList:
+        init, target = findMarks(maze)
+
+        print('\n\t+ Init:', init, 'Target:', target)
+        
+        print('\t\tManhattan distance:')
+        astar(maze[:], init, target, manhattanDist, [], init)
+
+        print('\t\tEuclidean distance:')
+        astar(maze[:], init, target, euclideanDist, [], init)
+        
