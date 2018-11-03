@@ -1,4 +1,6 @@
 # Visualization https://qiao.github.io/PathFinding.js/visual/
+# Explanation https://www.geeksforgeeks.org/a-search-algorithm/
+
 def getMaze():
     # Matrix with m lines and n columns
     coords = input()
@@ -26,7 +28,9 @@ def findMarks(maze):
     
     return init, target
 
+def manhattanDist(actual, target):
+    return  abs(actual[0] - target[0]) + abs(actual[1] - target[1])
+
 if __name__ == "__main__":
     maze = getMaze()
     init, target = findMarks(maze)
-    
