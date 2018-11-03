@@ -6,4 +6,4 @@
 
 ## Path finding
 
-- A* search :soon:
+- A* search :heavy_check_mark:
