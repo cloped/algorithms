@@ -19,10 +19,10 @@ def getMazes():
         while emptyMaze[randomPos[0]][randomPos[1]] != ' ':
             randomPos = (randint(0, 5),randint(0, 5))
         
-        auxMaze = emptyMaze
+        # Not passing by reference the list 
+        auxMaze = emptyMaze[:] 
         auxMaze[randomPos[0]][randomPos[1]] = 'o'
         mazesList.append(auxMaze)
-        break
 
     return mazesList
 
@@ -93,4 +93,4 @@ if __name__ == "__main__":
     maze = mazesList[0]
     init, target = findMarks(maze)
     print('Init:', init, 'Target:', target)
-    #astar(maze, init, target, manhattanDist, init)
+    astar(maze, init, target, manhattanDist, init)
