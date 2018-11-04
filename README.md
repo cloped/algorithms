@@ -6,7 +6,7 @@
 
 ## Path finding
 
-- A* search :heavy_check_mark:
+- A* search **fix** :soon:
 
 ## Linear systems:
 
