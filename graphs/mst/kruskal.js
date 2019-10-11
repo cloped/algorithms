@@ -1,3 +1,4 @@
+// https://www.urionlinejudge.com.br/judge/pt/problems/view/1152
 const input = require('fs').readFileSync('/dev/stdin', 'utf8');
 const lines = input.split('\n');
 let [V, E] = lines.shift().split(' ').map(x => parseInt(x));
